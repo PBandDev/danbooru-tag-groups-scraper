@@ -13,7 +13,7 @@ Scrapes Danbooru's `tag_groups` wiki index through the `wiki_pages` API, follows
 ## Quickstart
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/PBandDev/danbooru-tag-groups-scraper.git
 cd danbooru-tag-groups-scraper
 uv sync --extra dev
 uv run python -m danbooru_tag_groups.cli scrape --output-dir ./data
@@ -58,3 +58,7 @@ The repo includes GitHub Actions for:
 - monthly GitHub releases published from `main`
 
 Each monthly release uploads the current `tag_groups_hierarchical.json` and `tag_groups_flat.jsonl` files as release assets. Same-month reruns refresh that month's release assets for recovery.
+
+Release assets are available here:
+
+- `https://github.com/PBandDev/danbooru-tag-groups-scraper/releases`
