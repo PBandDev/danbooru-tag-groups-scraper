@@ -1,0 +1,32 @@
+[See [[tag groups]].]
+
+[expand=Table of Contents]
+* 1. "About":#dtext-about
+[/expand]
+
+These are the possible changes fan artists make that differentiate their works from canon.
+
+h4#major. Major changes
+* [[Alternate species]]
+* [[Animalization]]
+* [[Foodification]]
+
+h4#whole_attire. Changes of the whole attire
+* [[Adapted costume]]
+* [[Alternate costume]]
+** [[Costume switch]]
+** [[Casual]]
+** [[Contemporary]]
+** [[Enmaided]]
+** [[Costume combination]]
+* [[Cosplay]]
+** (For instructions about specific "cosplays" of characters, see the [[cosplay]] tag)
+
+h4#specific. Changes of specific clothes or accessories
+* [[Alternate headwear]]
+* [[Alternate weapon]]
+* [[Bespectacled]] (added eyewear)
+
+h4#see_also. See also
+* [[Tag groups]]
+

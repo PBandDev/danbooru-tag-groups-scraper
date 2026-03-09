@@ -1,0 +1,85 @@
+name: Publish Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 1 * *"
+
+concurrency:
+  group: publish-data
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: uv sync --frozen --extra dev
+
+      - name: Run offline tests
+        run: uv run python -m pytest -q
+
+      - name: Generate data
+        run: uv run python -m danbooru_tag_groups.cli scrape --output-dir dist
+
+      - name: Compute release metadata
+        shell: bash
+        run: |
+          echo "RELEASE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "RELEASE_MONTH=$(date -u +"%Y-%m")" >> "$GITHUB_ENV"
+          echo "RELEASE_TAG=data-$(date -u +"%Y-%m")" >> "$GITHUB_ENV"
+
+      - name: Write release notes
+        shell: bash
+        run: |
+          cat > release-notes.txt <<EOF
+          Latest Danbooru tag-group dataset.
+
+          Release month: ${RELEASE_MONTH}
+          Generated at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          Source: https://danbooru.donmai.us/wiki_pages/tag_groups
+          Commit: ${RELEASE_COMMIT}
+          EOF
+
+      - name: Create or update monthly release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh release edit "${RELEASE_TAG}" \
+              --title "Dataset ${RELEASE_MONTH}" \
+              --notes-file release-notes.txt
+          else
+            gh release create "${RELEASE_TAG}" \
+              --target main \
+              --title "Dataset ${RELEASE_MONTH}" \
+              --notes-file release-notes.txt
+          fi
+
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${RELEASE_TAG}" dist/tag_groups_hierarchical.json dist/tag_groups_flat.jsonl --clobber

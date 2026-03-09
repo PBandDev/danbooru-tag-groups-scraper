@@ -1,0 +1,20 @@
+[See [[tag groups]].]
+
+h4#genstyles. General style parodies
+h5#decade. By Decade
+* [[retro artstyle]]
+** [[1920s (style)|]] [tn]| (post #7050932) [/tn]
+** [[1930s (style)|]]
+
+h5##design. By Design
+* [[Animification]]
+
+h5. By Copyright
+* [[Bikkuriman (style)|]]
+* [[Friday Night Funkin' (style)|]]
+
+h4#styles. Artist styles
+h5#a. A
+* [[Aaron McGruder (style)|]] ([[The Boondocks]])
+* [[AC-bu (style)|]]
+* [[William-Adolphe Bouguereau (style)|]] (Academic art)

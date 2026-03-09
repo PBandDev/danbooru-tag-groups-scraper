@@ -1,0 +1,2 @@
+"""Danbooru tag groups scraper."""
+
