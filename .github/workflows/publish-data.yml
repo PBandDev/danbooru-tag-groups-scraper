@@ -71,10 +71,18 @@ jobs:
           if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
             gh release delete "${RELEASE_TAG}" --cleanup-tag --yes
           fi
-          gh release create "${RELEASE_TAG}" \
-            --target main \
-            --title "Dataset ${RELEASE_MONTH}" \
-            --notes-file release-notes.txt
+          for attempt in 1 2 3 4 5; do
+            if gh release create "${RELEASE_TAG}" \
+              --target main \
+              --title "Dataset ${RELEASE_MONTH}" \
+              --notes-file release-notes.txt; then
+              break
+            fi
+            if [ "${attempt}" -eq 5 ]; then
+              exit 1
+            fi
+            sleep 5
+          done
 
       - name: Upload release assets
         env:

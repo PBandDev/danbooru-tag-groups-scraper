@@ -79,6 +79,8 @@ def test_publish_workflow_uses_versioned_monthly_releases() -> None:
     assert "git rev-parse HEAD" in workflow
     assert 'gh release delete "${RELEASE_TAG}" --cleanup-tag --yes' in workflow
     assert 'gh release create "${RELEASE_TAG}"' in workflow
+    assert "for attempt in 1 2 3 4 5" in workflow
+    assert 'sleep 5' in workflow
     assert 'gh release edit "${RELEASE_TAG}"' not in workflow
     assert "latest-data" not in workflow
 
