@@ -7,6 +7,7 @@ from typing import Sequence
 
 from danbooru_tag_groups.export import export_outputs
 from danbooru_tag_groups.fetch import scrape_site
+from danbooru_tag_groups.implications import expand_pages_with_implications
 
 
 DEFAULT_ROOT_URL = "https://danbooru.donmai.us/wiki_pages/tag_groups"
@@ -42,6 +43,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             verbose=args.verbose,
         )
     )
+    pages = asyncio.run(expand_pages_with_implications(pages=pages, timeout=args.timeout, delay_ms=args.delay_ms))
     export_outputs(pages=pages, output_dir=Path(args.output_dir), root_url=args.root_url)
     return 0
 

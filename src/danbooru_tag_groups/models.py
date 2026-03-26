@@ -9,6 +9,8 @@ class TagEntry:
     canonical_name: str
     url: str | None
     notes: str | None = None
+    source: str = "wiki"
+    implied_via: str | None = None
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)

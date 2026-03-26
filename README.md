@@ -13,10 +13,10 @@ Same-month reruns refresh that month's release assets if the publish job needs t
 
 ## What this repo does
 
-This project reads Danbooru's `tag_groups` wiki index through the `wiki_pages` API, follows linked `tag_group:*` and `list_of_*` pages, and exports the results in two formats:
+This project reads Danbooru's `tag_groups` wiki index through the `wiki_pages` API, follows linked `tag_group:*` and `list_of_*` pages, expands the scraped base tags with active tag implications, and exports the results in two formats. That means variant tags like clothing and accessory derivatives inherit the same group membership as their parent tags in the generated dataset.
 
-- `tag_groups_hierarchical.json`: nested pages, sections, and tags
-- `tag_groups_flat.jsonl`: one tag row per line, which is easier to load into scripts and data tools
+- `tag_groups_hierarchical.json`: nested pages, sections, and tags, including implication-derived entries
+- `tag_groups_flat.jsonl`: one tag row per line, which is easier to load into scripts and data tools, with provenance fields such as `"source": "implication"` and `implied_via`
 
 ## Quick start
 

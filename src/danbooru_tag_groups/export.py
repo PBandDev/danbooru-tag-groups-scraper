@@ -4,7 +4,7 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-from danbooru_tag_groups.models import Page, Section
+from danbooru_tag_groups.models import Page, Section, TagEntry
 
 
 def build_hierarchical_document(*, pages: list[Page], root_url: str) -> dict[str, object]:
@@ -44,22 +44,27 @@ def export_outputs(*, pages: list[Page], output_dir: Path, root_url: str) -> tup
 
 
 def _section_rows(page: Page, section: Section) -> list[dict[str, object]]:
-    rows = [
-        {
-            "page_title": page.title,
-            "page_kind": page.kind,
-            "page_slug": page.slug,
-            "page_url": page.url,
-            "section_title": section.title,
-            "section_path": section.path,
-            "tag_label": tag.label,
-            "canonical_name": tag.canonical_name,
-            "tag_url": tag.url,
-            "notes": tag.notes,
-        }
-        for tag in section.tags
-    ]
+    rows = [_row_from_tag(page, section, tag) for tag in section.tags]
     for child in section.children:
         rows.extend(_section_rows(page, child))
     return rows
+
+
+def _row_from_tag(page: Page, section: Section, tag: TagEntry) -> dict[str, object]:
+    row = {
+        "page_title": page.title,
+        "page_kind": page.kind,
+        "page_slug": page.slug,
+        "page_url": page.url,
+        "section_title": section.title,
+        "section_path": section.path,
+        "tag_label": tag.label,
+        "canonical_name": tag.canonical_name,
+        "tag_url": tag.url,
+        "notes": tag.notes,
+        "source": tag.source,
+    }
+    if tag.implied_via is not None:
+        row["implied_via"] = tag.implied_via
+    return row
 

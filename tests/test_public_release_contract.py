@@ -86,3 +86,11 @@ def test_readme_documents_offline_and_live_test_commands() -> None:
     assert "uv run python -m pytest -q" in readme
     assert "uv run python -m pytest -q --live" in readme
     assert "same-month reruns refresh that month's release assets" in readme
+
+
+def test_readme_documents_default_implication_resolution() -> None:
+    readme = (REPO_ROOT / "README.md").read_text(encoding="utf-8").lower()
+
+    assert "tag implications" in readme
+    assert "variant tags" in readme
+    assert '"source": "implication"' in readme

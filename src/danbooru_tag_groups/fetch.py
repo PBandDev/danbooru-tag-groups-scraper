@@ -25,17 +25,32 @@ def wiki_page_json_url(title: str) -> str:
 
 
 async def fetch_json(client: httpx.AsyncClient, url: str) -> dict[str, object]:
+    data = await _fetch_json_value(client, url)
+    if not isinstance(data, dict):
+        raise ValueError(f"Expected object response from {url}")
+    return data
+
+
+async def fetch_json_list(
+    client: httpx.AsyncClient, url: str, *, params: dict[str, object] | None = None
+) -> list[dict[str, object]]:
+    data = await _fetch_json_value(client, url, params=params)
+    if not isinstance(data, list) or not all(isinstance(item, dict) for item in data):
+        raise ValueError(f"Expected list response from {url}")
+    return data
+
+
+async def _fetch_json_value(
+    client: httpx.AsyncClient, url: str, *, params: dict[str, object] | None = None
+) -> object:
     for attempt in range(1, MAX_FETCH_ATTEMPTS + 1):
-        response = await client.get(url)
+        response = await client.get(url, params=params)
         if response.status_code in RETRYABLE_STATUS_CODES and attempt < MAX_FETCH_ATTEMPTS:
             await asyncio.sleep(_retry_delay_seconds(response, attempt))
             continue
 
         response.raise_for_status()
-        data = response.json()
-        if not isinstance(data, dict):
-            raise ValueError(f"Expected object response from {url}")
-        return data
+        return response.json()
 
     raise RuntimeError(f"Exhausted fetch attempts for {url}")
 
