@@ -9,7 +9,7 @@ The monthly release job publishes these files:
 - `tag_groups_hierarchical.json`
 - `tag_groups_flat.jsonl`
 
-Same-month reruns refresh that month's release assets if the publish job needs to be run again.
+Same-month reruns recreate that month's release so GitHub shows a fresh publish date while keeping the same monthly tag.
 
 ## What this repo does
 

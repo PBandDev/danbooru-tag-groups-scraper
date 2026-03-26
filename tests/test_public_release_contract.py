@@ -77,6 +77,9 @@ def test_publish_workflow_uses_versioned_monthly_releases() -> None:
     assert "uv run python -m pytest -q" in workflow
     assert "data-" in workflow
     assert "git rev-parse HEAD" in workflow
+    assert 'gh release delete "${RELEASE_TAG}" --cleanup-tag --yes' in workflow
+    assert 'gh release create "${RELEASE_TAG}"' in workflow
+    assert 'gh release edit "${RELEASE_TAG}"' not in workflow
     assert "latest-data" not in workflow
 
 
@@ -85,7 +88,7 @@ def test_readme_documents_offline_and_live_test_commands() -> None:
 
     assert "uv run python -m pytest -q" in readme
     assert "uv run python -m pytest -q --live" in readme
-    assert "same-month reruns refresh that month's release assets" in readme
+    assert "same-month reruns recreate that month's release" in readme
 
 
 def test_readme_documents_default_implication_resolution() -> None:

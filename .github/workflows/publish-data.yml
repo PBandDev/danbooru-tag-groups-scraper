@@ -63,21 +63,18 @@ jobs:
           Commit: ${RELEASE_COMMIT}
           EOF
 
-      - name: Create or update monthly release
+      - name: Recreate monthly release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
-            gh release edit "${RELEASE_TAG}" \
-              --title "Dataset ${RELEASE_MONTH}" \
-              --notes-file release-notes.txt
-          else
-            gh release create "${RELEASE_TAG}" \
-              --target main \
-              --title "Dataset ${RELEASE_MONTH}" \
-              --notes-file release-notes.txt
+            gh release delete "${RELEASE_TAG}" --cleanup-tag --yes
           fi
+          gh release create "${RELEASE_TAG}" \
+            --target main \
+            --title "Dataset ${RELEASE_MONTH}" \
+            --notes-file release-notes.txt
 
       - name: Upload release assets
         env:
